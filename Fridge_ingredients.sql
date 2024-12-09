@@ -6,18 +6,7 @@ CREATE DATABASE Fridge_ingredients
 	ENCODING = 'UTF8'
 	CONNECTION LIMIT = -1;
 
-CREATE TABLE Fridge_contents
-(
-	item_id integer NOT NULL,
-	user_id integer,
-	ingredient_id integer,
-	quantity integer,
-	unit_id integer,
-	PRIMARY KEY (item_id),
-	FOREIGN KEY (ingredient_id) REFERENCES Ingredients(ingredient_id) ON DELETE CASCADE ON UPDATE CASCADE, 
-	FOREIGN KEY (unit_id) REFERENCES Units(unit_id) ON DELETE CASCADE ON UPDATE CASCADE 
-	
-);
+
 
 CREATE TABLE Units
 (
@@ -34,4 +23,17 @@ CREATE TABLE Ingredients
 	PRIMARY KEY(ingredient_id),
 	FOREIGN KEY (unit_id) REFERENCES Units(unit_id) ON DELETE CASCADE ON UPDATE CASCADE 
 );
+
+
+CREATE TABLE Fridge_contents
+(
+	item_id integer NOT NULL,
+	user_id integer,
+	ingredient_id integer,
+	quantity integer,
+	unit_id integer,
+	PRIMARY KEY (item_id),
+	FOREIGN KEY (ingredient_id) REFERENCES Ingredients(ingredient_id) ON DELETE CASCADE ON UPDATE CASCADE, 
+	FOREIGN KEY (unit_id) REFERENCES Units(unit_id) ON DELETE CASCADE ON UPDATE CASCADE 
 	
+);
