@@ -1,0 +1,76 @@
+package com.example.recipe_suggestion;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import java.sql.*;
+
+
+public class RecipeFilterApp extends Application {
+
+    private List<CheckBox> mealTypeCheckBoxes = new ArrayList<>();
+    private List<CheckBox> dietaryCheckBoxes = new ArrayList<>();
+    private List<CheckBox> proteinCheckBoxes = new ArrayList<>();
+    private List<CheckBox> cookingTimeCheckBoxes = new ArrayList<>();
+
+    private ResultSet outcome   = null;
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Recipe Filter System");
+
+        // Filter categories
+        VBox Layout = new VBox(5);
+        Layout.setPadding(new Insets(10));
+
+        Layout.getChildren().addAll(
+                Filter_UI("Type of Meal", new String[]{"Any", "Breakfast", "Lunch", "Dinner", "Snack", "Dessert", "Smoothie"}, mealTypeCheckBoxes),
+                Filter_UI("Dietary Restrictions", new String[]{"Vegetarian", "Vegan", "Dairy-Free", "Gluten-Free", "Nut-Free", "Paleo", "None"}, dietaryCheckBoxes),
+                Filter_UI("Type of Protein", new String[]{"Any", "Chicken", "Eggs", "Beef", "Pork", "Lamb", "Fish & Seafood", "Plant-Based Meats", "None"}, proteinCheckBoxes),
+                Filter_UI("Cooking Time", new String[]{"Any", "0-10", "10-20", "20-30", "30-45", "45+"}, cookingTimeCheckBoxes)
+        );  //sets up our 4 filters
+
+        Button generate = new Button("Generate Recipes");//button used to begin recipe generation
+
+        RecipeSelectionUI recipeselect = new RecipeSelectionUI();
+
+        generate.setOnAction(e -> {
+            applyFilters();
+
+            Stage selectionstage = new Stage();
+            recipeselect.start(selectionstage);
+        });
+
+        Layout.getChildren().add(generate);
+
+        Scene scene = new Scene(Layout, 1000, 250);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private HBox Filter_UI(String title, String[] options, List<CheckBox> checkBoxList) {
+
+        HBox section = new HBox(10);
+        section.setPadding(new Insets(10));
+        section.setStyle("-fx-border-color: lightgray; -fx-border-width: 1; -fx-padding: 10;");
+
+        Label label = new Label(title);
+        section.getChildren().add(label);
+
+        for (String option : options) {
+            CheckBox checkBox = new CheckBox(option);
+            checkBoxList.add(checkBox);
+            section.getChildren().add(checkBox);
+        }
+
+        return section;
+    }
