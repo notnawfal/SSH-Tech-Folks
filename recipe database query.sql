@@ -1,4 +1,9 @@
-
+CREATE DATABASE "Recipe_database"
+	WITH
+	OWNER = r
+	ENCODING = 'UTF8'
+	CONNECTION LIMIT = -1;
+\c Recipe_database
 
 CREATE TABLE Recipes (
     recipe_id SERIAL PRIMARY KEY,
@@ -9,15 +14,7 @@ CREATE TABLE Recipes (
     img_url TEXT
 );
 
--- Create table: Recipe_ingredients
-CREATE TABLE Recipe_ingredients (
-    recipe_id INT,
-    ingredient_id INT,
-    quantity DECIMAL(10, 2),
-    unit_id INT,
-    PRIMARY KEY (recipe_id, ingredient_id),
-    FOREIGN KEY (recipe_id) REFERENCES Recipes(recipe_id) ON DELETE CASCADE
-);
+
 
 -- Create table: Instructions
 CREATE TABLE Instructions (
@@ -41,4 +38,47 @@ CREATE TABLE Dietary_suitability (
     PRIMARY KEY (recipe_id, dietary_id),
     FOREIGN KEY (recipe_id) REFERENCES Recipes(recipe_id) ON DELETE CASCADE,
     FOREIGN KEY (dietary_id) REFERENCES Dietary_requirement(dietary_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE Units
+(
+	unit_id integer NOT NULL,
+	name text,
+	PRIMARY KEY(unit_id)
+);
+
+CREATE TABLE Ingredients
+(
+	ingredient_id integer NOT NULL,
+	name text,
+	unit_id integer,
+	PRIMARY KEY(ingredient_id),
+	FOREIGN KEY (unit_id) REFERENCES Units(unit_id) ON DELETE CASCADE
+);
+
+-- Create table: Recipe_ingredients
+CREATE TABLE Recipe_ingredients (
+    recipe_id INT,
+    ingredient_id INT,
+    quantity DECIMAL(10, 2),
+    unit_id INT,
+    PRIMARY KEY (recipe_id, ingredient_id),
+    FOREIGN KEY (recipe_id) REFERENCES Recipes(recipe_id) ON DELETE CASCADE,
+    FOREIGN KEY (ingredient_id) REFERENCES Ingredients(ingredient_id) ON DELETE CASCADE,
+    FOREIGN KEY (unit_id) REFERENCES Units(unit_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE Fridge_contents
+(
+	item_id integer NOT NULL,
+	user_id integer,
+	ingredient_id integer,
+	quantity integer,
+	unit_id integer,
+	PRIMARY KEY (item_id),
+	FOREIGN KEY (ingredient_id) REFERENCES Ingredients(ingredient_id) ON DELETE CASCADE, 
+	FOREIGN KEY (unit_id) REFERENCES Units(unit_id) ON DELETE CASCADE ON UPDATE CASCADE 
+	
 );
