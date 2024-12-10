@@ -2,45 +2,45 @@
 \c Recipe_database
 
 -- Insert data into Recipes
-INSERT INTO Recipes (dish_name, meal_type, protein, cooking_time, img_url)
+INSERT INTO Recipes (recipe_id, dish_name, meal_type, protein, cooking_time, img_url)
 VALUES
-('Spaghetti Bolognese', 'Dinner', 'Beef', 45, 'https://example.com/spaghetti.jpg'),
-('Vegetarian Curry', 'Lunch', 'Tofu', 30, 'https://example.com/veg-curry.jpg'),
-('Chicken Caesar Salad', 'Lunch', 'Chicken', 20, 'https://example.com/caesar-salad.jpg'),
-('Grilled Salmon', 'Dinner', 'Salmon', 25, 'https://example.com/salmon.jpg'),
-('Pancakes', 'Breakfast', 'None', 15, 'https://example.com/pancakes.jpg'),
-('Fruit Salad', 'Snack', 'None', 10, NULL),
-('Almond Smoothie', 'Beverage', 'Almond', 5, 'https://example.com/smoothie.jpg');
+(1,'Spaghetti Bolognese', 'Dinner', 'Beef', 45, 'https://example.com/spaghetti.jpg'),
+(2,'Vegetarian Curry', 'Lunch', 'Tofu', 30, 'https://example.com/veg-curry.jpg'),
+(3,'Chicken Caesar Salad', 'Lunch', 'Chicken', 20, 'https://example.com/caesar-salad.jpg'),
+(4,'Grilled Salmon', 'Dinner', 'Salmon', 25, 'https://example.com/salmon.jpg'),
+(5,'Pancakes', 'Breakfast', 'None', 15, 'https://example.com/pancakes.jpg'),
+(6,'Fruit Salad', 'Snack', 'None', 10, NULL),
+(7,'Almond Smoothie', 'Beverage', 'Almond', 5, 'https://example.com/smoothie.jpg');
 
 -- Insert data into Instructions
-INSERT INTO Instructions (recipe_id, step_number, instruction_description)
+INSERT INTO Instructions (instruction_id, recipe_id, step_number, instruction_description)
 VALUES
-(1, 1, 'Boil water and cook spaghetti until al dente.'),
-(1, 2, 'Heat oil, cook onions and garlic, then add ground beef.'),
-(1, 3, 'Add tomato sauce and simmer for 20 minutes.'),
-(2, 1, 'Heat oil and fry onions and spices.'),
-(2, 2, 'Add vegetables and tofu, then cook for 15 minutes.'),
-(3, 1, 'Grill chicken breast until golden.'),
-(3, 2, 'Toss lettuce, croutons, and Caesar dressing.'),
-(3, 3, 'Top with grilled chicken and Parmesan cheese.'),
-(4, 1, 'Season salmon fillets and grill for 15 minutes.'),
-(4, 2, 'Serve with lemon slices and steamed vegetables.'),
-(5, 1, 'Mix flour, milk, and eggs into a smooth batter.'),
-(5, 2, 'Cook batter on a hot pan until golden brown.'),
-(6, 1, 'Chop all fruits and mix in a bowl.'),
-(6, 2, 'Serve fresh or chilled.'),
-(7, 1, 'Blend almond milk, banana, and honey until smooth.'),
-(7, 2, 'Serve in a glass with ice.');
+(1,1, 1, 'Boil water and cook spaghetti until al dente.'),
+(2,1, 2, 'Heat oil, cook onions and garlic, then add ground beef.'),
+(3,1, 3, 'Add tomato sauce and simmer for 20 minutes.'),
+(4,2, 1, 'Heat oil and fry onions and spices.'),
+(5,2, 2, 'Add vegetables and tofu, then cook for 15 minutes.'),
+(6,3, 1, 'Grill chicken breast until golden.'),
+(7,3, 2, 'Toss lettuce, croutons, and Caesar dressing.'),
+(8,3, 3, 'Top with grilled chicken and Parmesan cheese.'),
+(9,4, 1, 'Season salmon fillets and grill for 15 minutes.'),
+(10,4, 2, 'Serve with lemon slices and steamed vegetables.'),
+(11,5, 1, 'Mix flour, milk, and eggs into a smooth batter.'),
+(12,5, 2, 'Cook batter on a hot pan until golden brown.'),
+(13,6, 1, 'Chop all fruits and mix in a bowl.'),
+(14,6, 2, 'Serve fresh or chilled.'),
+(15,7, 1, 'Blend almond milk, banana, and honey until smooth.'),
+(16,7, 2, 'Serve in a glass with ice.');
 
 -- Insert data into Dietary_requirement
-INSERT INTO Dietary_requirement (name)
+INSERT INTO Dietary_requirement (dietary_id, name)
 VALUES
-('Vegetarian'),
-('Vegan'),
-('Gluten-Free'),
-('Nut-Free'),
-('Dairy-Free'),
-('Paleo');
+(1,'Vegetarian'),
+(2,'Vegan'),
+(3,'Gluten-Free'),
+(4,'Nut-Free'),
+(5,'Dairy-Free'),
+(6,'Paleo');
 
 -- Insert data into Dietary_suitability
 INSERT INTO Dietary_suitability (recipe_id, dietary_id)
@@ -54,7 +54,7 @@ VALUES
 (6, 1), -- Fruit Salad is Vegetarian
 (6, 2), -- Fruit Salad is Vegan
 (7, 1), -- Almond Smoothie is Vegetarian
-(7, 3), -- Almond Smoothie is Gluten-Free;
+(7, 3); -- Almond Smoothie is Gluten-Free;
 
 -- Insert data into Units
 INSERT INTO Units (unit_id, name)
