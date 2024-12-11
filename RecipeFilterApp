@@ -76,7 +76,7 @@ public class RecipeFilterApp extends Application {
     }
 
 
-private void applyFilters() {
+    private void applyFilters() {
         String sqlQuery = buildSQLQuery();
         System.out.println(sqlQuery);
     }
