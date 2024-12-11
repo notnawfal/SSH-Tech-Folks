@@ -177,7 +177,21 @@ public class RecipeFilterApp extends Application {
 
         List<Integer> validRecipeIDs = new ArrayList<>();
 
-        String sqlQuery = "SELECT recipe_id FROM recipes;"; //TEMP : Our sql query for checking against fridge contents will go here.
+        String sqlQuery = "WITH IngredientAvailability AS (\n" +
+                "        SELECT Recipe_ingredients.recipe_id, Recipe_ingredients.ingredient_id, Recipe_ingredients.quantity AS required_quantity, Fridge_contents.quantity AS fridge_quantity\n" +
+                "        FROM Recipe_ingredients\n" +
+                "        LEFT JOIN Fridge_contents ON Recipe_ingredients.ingredient_id = Fridge_contents.ingredient_id),\n" +
+                "        MissingIngredients AS (\n" +
+                "        SELECT recipe_id,\n" +
+                "        COUNT(*) AS missing_count\n" +
+                "        FROM IngredientAvailability\n" +
+                "        WHERE fridge_quantity IS NULL OR fridge_quantity < required_quantity\n" +
+                "        GROUP BY recipe_id)\n" +
+                "        SELECT ri.recipe_id\n" +
+                "        FROM Recipe_ingredients ri \n" +
+                "        JOIN MissingIngredients mi ON ri.recipe_id = mi.recipe_id\n" +
+                "        WHERE mi.missing_count <= 2\n" +
+                "        GROUP BY ri.recipe_id;";
 
         try {
             Connection conn = DriverManager.getConnection(Credentials.url, Credentials.user, Credentials.password);
