@@ -81,36 +81,39 @@ private void applyFilters() {
         System.out.println(sqlQuery);
     }
 
-    private String buildSQLQuery() {
+    public static String buildSQLQuery() {
         StringBuilder query = new StringBuilder("SELECT recipe_id FROM Recipes WHERE 1=1");
 
         // Meal type filter
         List<String> selectedMealTypes = getSelectedFilters(mealTypeCheckBoxes);
-        if (!selectedMealTypes.contains("Any")) {
+        if ((!selectedMealTypes.contains("Any")) && !selectedMealTypes.isEmpty()) {
             query.append(" AND meal_type IN (").append(formatForSQL(selectedMealTypes)).append(")");
         }
 
         // Dietary restrictions filter
         List<String> selectedDietary = getSelectedFilters(dietaryCheckBoxes);
-        if (!selectedDietary.contains("None")) {
+        if ((!selectedDietary.contains("None")) && !selectedDietary.isEmpty()) {
             query.append(" AND recipe_id IN (")
                     .append("SELECT recipe_id FROM Dietary_suitability WHERE dietary_id IN (")
-                    .append(formatForSQL(selectedDietary)).append("))");
+                    .append("SELECT dietary_id FROM Dietary_requirement WHERE name IN (")
+                    .append(formatForSQL(selectedDietary))
+                    .append(")))");
         }
 
         // Protein filter
         List<String> selectedProteins = getSelectedFilters(proteinCheckBoxes);
-        if (!selectedProteins.contains("Any")) {
+        if ((!selectedProteins.contains("Any")) && !selectedProteins.isEmpty()) {
             query.append(" AND protein IN (").append(formatForSQL(selectedProteins)).append(")");
         }
 
         // Cooking time filter
         List<String> selectedTimes = getSelectedFilters(cookingTimeCheckBoxes);
-        if (!selectedTimes.contains("Any")) {
+        if ((!selectedTimes.contains("Any"))&& !selectedTimes.isEmpty()) {
             query.append(" AND (");
             boolean firstCondition = true;
 
             for (String timeRange : selectedTimes) {
+                // Handle "45+" case
                 if (timeRange.equals("45+")) {
                     if (!firstCondition) {
                         query.append(" OR ");
@@ -118,6 +121,7 @@ private void applyFilters() {
                     query.append("cooking_time >= 45");
                     firstCondition = false;
                 } else {
+                    // Handle ranges like "10-20"
                     String[] parts = timeRange.split("-");
                     if (parts.length == 2) {
                         try {
@@ -130,6 +134,7 @@ private void applyFilters() {
                             query.append("cooking_time BETWEEN ").append(LB).append(" AND ").append(UB);
                             firstCondition = false;
                         } catch (NumberFormatException e) {
+                            // Log invalid ranges for debugging
                             System.err.println("Invalid time range: " + timeRange);
                         }
                     } else {
@@ -140,10 +145,9 @@ private void applyFilters() {
 
             query.append(")");
         }
-
+        query.append(";");
         return query.toString();
     }
-
 
 
     private List<String> getSelectedFilters(List<CheckBox> checkBoxes) {
