@@ -17,10 +17,10 @@ import java.sql.*;
 
 public class RecipeFilterApp extends Application {
 
-    private List<CheckBox> mealTypeCheckBoxes = new ArrayList<>();
-    private List<CheckBox> dietaryCheckBoxes = new ArrayList<>();
-    private List<CheckBox> proteinCheckBoxes = new ArrayList<>();
-    private List<CheckBox> cookingTimeCheckBoxes = new ArrayList<>();
+    private static List<CheckBox> mealTypeCheckBoxes = new ArrayList<>();
+    private static List<CheckBox> dietaryCheckBoxes = new ArrayList<>();
+    private static List<CheckBox> proteinCheckBoxes = new ArrayList<>();
+    private static List<CheckBox> cookingTimeCheckBoxes = new ArrayList<>();
 
     private ResultSet outcome   = null;
 
@@ -169,4 +169,32 @@ public class RecipeFilterApp extends Application {
             }
         }
         return formatted.toString();
+    }
+
+
+
+    public static List<Integer> validRecipes() {
+
+        List<Integer> validRecipeIDs = new ArrayList<>();
+
+        String sqlQuery = "SELECT recipe_id FROM recipes;"; //TEMP : Our sql query for checking against fridge contents will go here.
+
+        try {
+            Connection conn = DriverManager.getConnection(Credentials.url, Credentials.user, Credentials.password);
+            PreparedStatement stmt = conn.prepareStatement(sqlQuery);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                validRecipeIDs.add(rs.getInt("recipe_id"));
+                System.out.println("validrecipes recipes id" + validRecipeIDs);
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return validRecipeIDs;
     }
