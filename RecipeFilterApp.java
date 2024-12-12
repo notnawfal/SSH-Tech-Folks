@@ -136,7 +136,7 @@ public class RecipeFilterApp extends Application {
         return query.toString();
     }
 
-    private List<String> getSelectedFilters(List<CheckBox> checkBoxes) {
+    public static List<String> getSelectedFilters(List<CheckBox> checkBoxes) {
         List<String> selected = new ArrayList<>();
         for (CheckBox checkBox : checkBoxes) {
             if (checkBox.isSelected()) {
@@ -146,7 +146,7 @@ public class RecipeFilterApp extends Application {
         return selected;
     }
 
-    private String formatForSQL(List<String> items) {
+    private static String formatForSQL(List<String> items) {
         StringBuilder formatted = new StringBuilder();
         for (int i = 0; i < items.size(); i++) {
             formatted.append("'").append(items.get(i)).append("'");
