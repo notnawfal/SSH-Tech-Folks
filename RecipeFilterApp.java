@@ -241,4 +241,50 @@ public class RecipeFilterApp extends Application {
 
         return recipeIDs;
     }
+
+    public class Record {
+        private int recipe_id;
+        private String dish_name;
+        private String meal_type;
+        private String protein;
+        private int cooking_time;
+        private String img_url;
+        private String instructions;
+        private int step_num;
+
+        public Record(int recipe_id,String dish_name, String meal_type, String protein, int cooking_time, String img_url){
+            this.recipe_id = recipe_id;
+            this.dish_name = dish_name;
+            this.meal_type = meal_type;
+            this.protein = protein;
+            this.cooking_time = cooking_time;
+            this.img_url = img_url;
+        }
+
+        // Getters and Setters
+        public int getrecipe_id() {
+            return recipe_id;
+        }
+
+        public String getDish_name() {
+            return dish_name;
+        }
+
+        public String getMeal_type() {
+            return meal_type;
+        }
+
+        public String getProtein () {
+            return protein;
+        }
+
+        public int getCooking_time() {
+            return cooking_time;
+        }
+
+        public String  getImg_url() {
+            return img_url;
+        }
+    }
+    
 }
