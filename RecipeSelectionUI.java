@@ -58,7 +58,16 @@ public class RecipeSelectionUI extends Application {
         recipes_table.setItems(data);
 
         // selecting a recipe
-       //to be complteted a sselected recipe to display instructions in a seperate window 
+        recipes_table.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                wantedrecipeID = newValue.getrecipe_id();
+
+                PreparationOfRecipes starting = new PreparationOfRecipes();
+                Stage inststage = new Stage();
+                starting.start(inststage);
+            }
+        });
+
 
         VBox recipes = new VBox(recipes_table);
 
