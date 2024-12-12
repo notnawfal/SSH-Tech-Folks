@@ -90,9 +90,9 @@ public class PreparationOfRecipes extends Application{
 
         recipe_prep.setItems(data);
 
-        VBox inst = new VBox();
+        VBox inst = new VBox(recipe_prep);
 
-        Scene scene = new Scene(inst);
+        Scene scene = new Scene(inst, 1000, 1000);
         primaryStage.setScene(scene);
         primaryStage.show();
 
