@@ -241,7 +241,28 @@ public class RecipeFilterApp extends Application {
 
         return recipeIDs;
     }
+    
+public static List<Integer> filteredvalidRecipes() {
 
+        List<Integer> validRecipeIDs = new ArrayList<>();
+        validRecipeIDs.addAll(validRecipes());
+
+        List<Integer> allRecipeIDs = new ArrayList<>();   
+        allRecipeIDs.addAll(getRecords());
+
+        List<Integer> selectedRecipeIDs = new ArrayList<>();
+
+        for(int all:allRecipeIDs){
+            for(int valid:validRecipeIDs){
+                if(all==valid){
+                    selectedRecipeIDs.add(valid);
+                }
+            }
+        }
+        System.out.println("filtered valid recipe id" + selectedRecipeIDs);
+        return selectedRecipeIDs;
+    }
+    
     public class Record {
         private int recipe_id;
         private String dish_name;
