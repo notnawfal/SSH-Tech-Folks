@@ -81,17 +81,17 @@ public class RecipeFilterApp extends Application {
         System.out.println(sqlQuery);
     }
 
-    public static String buildSQLQuery() {
+    public static String buildSQLQuery(List<CheckBox> mealType,List<CheckBox> dietarycheck, List<CheckBox> protein, List<CheckBox> cookingtime) {
         StringBuilder query = new StringBuilder("SELECT recipe_id FROM Recipes WHERE 1=1");
 
         // Meal type filter
-        List<String> selectedMealTypes = getSelectedFilters(mealTypeCheckBoxes);
+        List<String> selectedMealTypes = getSelectedFilters(mealType);
         if ((!selectedMealTypes.contains("Any")) && !selectedMealTypes.isEmpty()) {
             query.append(" AND meal_type IN (").append(formatForSQL(selectedMealTypes)).append(")");
         }
 
         // Dietary restrictions filter
-        List<String> selectedDietary = getSelectedFilters(dietaryCheckBoxes);
+        List<String> selectedDietary = getSelectedFilters(dietarycheck);
         if ((!selectedDietary.contains("None")) && !selectedDietary.isEmpty()) {
             query.append(" AND recipe_id IN (")
                     .append("SELECT recipe_id FROM Dietary_suitability WHERE dietary_id IN (")
@@ -101,13 +101,13 @@ public class RecipeFilterApp extends Application {
         }
 
         // Protein filter
-        List<String> selectedProteins = getSelectedFilters(proteinCheckBoxes);
+        List<String> selectedProteins = getSelectedFilters(protein);
         if ((!selectedProteins.contains("Any")) && !selectedProteins.isEmpty()) {
             query.append(" AND protein IN (").append(formatForSQL(selectedProteins)).append(")");
         }
 
         // Cooking time filter
-        List<String> selectedTimes = getSelectedFilters(cookingTimeCheckBoxes);
+        List<String> selectedTimes = getSelectedFilters(cookingtime);
         if ((!selectedTimes.contains("Any"))&& !selectedTimes.isEmpty()) {
             query.append(" AND (");
             boolean firstCondition = true;
