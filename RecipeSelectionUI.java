@@ -51,9 +51,10 @@ public class RecipeSelectionUI extends Application {
         recipes_table.getColumns().add(imgColumn);
 
         // records from database
-      //a method to get the filtered recipes from recipefilterapp.java
-
-        data.addAll();
+        RecipeFilterApp recipeRecords = new RecipeFilterApp();
+        List<RecipeFilterApp.Record> records = recipeRecords.getNeededRecipes();
+       
+        data.addAll(records);
 
         recipes_table.setItems(data);
 
