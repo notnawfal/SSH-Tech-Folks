@@ -81,17 +81,17 @@ public class RecipeFilterApp extends Application {
         System.out.println(sqlQuery);
     }
 
-    public static String buildSQLQuery() {
+    public static String buildSQLQuery(List<CheckBox> mealType,List<CheckBox> dietarycheck, List<CheckBox> protein, List<CheckBox> cookingtime) {
         StringBuilder query = new StringBuilder("SELECT recipe_id FROM Recipes WHERE 1=1");
 
         // Meal type filter
-        List<String> selectedMealTypes = getSelectedFilters(mealTypeCheckBoxes);
+        List<String> selectedMealTypes = getSelectedFilters(mealType);
         if ((!selectedMealTypes.contains("Any")) && !selectedMealTypes.isEmpty()) {
             query.append(" AND meal_type IN (").append(formatForSQL(selectedMealTypes)).append(")");
         }
 
         // Dietary restrictions filter
-        List<String> selectedDietary = getSelectedFilters(dietaryCheckBoxes);
+        List<String> selectedDietary = getSelectedFilters(dietarycheck);
         if ((!selectedDietary.contains("None")) && !selectedDietary.isEmpty()) {
             query.append(" AND recipe_id IN (")
                     .append("SELECT recipe_id FROM Dietary_suitability WHERE dietary_id IN (")
@@ -101,13 +101,13 @@ public class RecipeFilterApp extends Application {
         }
 
         // Protein filter
-        List<String> selectedProteins = getSelectedFilters(proteinCheckBoxes);
+        List<String> selectedProteins = getSelectedFilters(protein);
         if ((!selectedProteins.contains("Any")) && !selectedProteins.isEmpty()) {
             query.append(" AND protein IN (").append(formatForSQL(selectedProteins)).append(")");
         }
 
         // Cooking time filter
-        List<String> selectedTimes = getSelectedFilters(cookingTimeCheckBoxes);
+        List<String> selectedTimes = getSelectedFilters(cookingtime);
         if ((!selectedTimes.contains("Any"))&& !selectedTimes.isEmpty()) {
             query.append(" AND (");
             boolean firstCondition = true;
@@ -242,7 +242,7 @@ public class RecipeFilterApp extends Application {
         return recipeIDs;
     }
     
-public static List<Integer> filteredvalidRecipes() {
+    public static List<Integer> filteredvalidRecipes() {
 
         List<Integer> validRecipeIDs = new ArrayList<>();
         validRecipeIDs.addAll(validRecipes());
@@ -262,6 +262,49 @@ public static List<Integer> filteredvalidRecipes() {
         System.out.println("filtered valid recipe id" + selectedRecipeIDs);
         return selectedRecipeIDs;
     }
+    
+    public List<Record> getNeededRecipes() {
+        List<Record> neededrecipes = new ArrayList();
+        String sql = "SELECT recipe_id, dish_name, meal_type, protein, cooking_time, img_url FROM Recipes WHERE recipe_id = ?";
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Recipe%20database", "u", "p");
+            PreparedStatement pstatemnt = con.prepareStatement(sql);
+            Iterator var5 = filteredvalidRecipes().iterator();
+
+            while(var5.hasNext()) {
+                Integer recipeId = (Integer)var5.next();
+                pstatemnt.clearParameters();
+                pstatemnt.setInt(1, recipeId);
+                ResultSet rs = pstatemnt.executeQuery();
+
+                while(rs.next()) {
+                    int recipe_id = rs.getInt("recipe_id");
+                    String dish_name = rs.getString("dish_name");
+                    String meal_type = rs.getString("meal_type");
+                    String protein = rs.getString("protein");
+                    int cooking_time = rs.getInt("cooking_time");
+                    String img_url = rs.getString("img_url");
+                    Record record = new Record(this, recipe_id, dish_name, meal_type, protein, cooking_time, img_url);
+                    PrintStream var10000 = System.out;
+                    String var10001 = record.getDish_name();
+                    var10000.println("all recipes" + var10001 + record.getrecipe_id());
+                    neededrecipes.add(record);
+                }
+
+                rs.close();
+            }
+
+            pstatemnt.close();
+            con.close();
+        } catch (Exception var15) {
+            System.out.println(var15);
+        }
+
+        return neededrecipes;
+    }
+
     
     public class Record {
         private int recipe_id;
@@ -307,5 +350,9 @@ public static List<Integer> filteredvalidRecipes() {
             return img_url;
         }
     }
-    
+
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
