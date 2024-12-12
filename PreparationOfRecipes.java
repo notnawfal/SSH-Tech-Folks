@@ -4,24 +4,12 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 import java.sql.*;
-
-import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -35,7 +23,6 @@ public class PreparationOfRecipes extends Application{
         String query = "SELECT * FROM Instructions WHERE recipe_id = ? ORDER BY step_number ASC;";
 
         try {
-            Class.forName("org.postgresql.Driver");
             Connection con = DriverManager.getConnection(Credentials.url, Credentials.user, Credentials.password);
 
             PreparedStatement pstatemnt = con.prepareStatement(query);
@@ -92,7 +79,8 @@ public class PreparationOfRecipes extends Application{
 
         VBox inst = new VBox(recipe_prep);
 
-        Scene scene = new Scene(inst, 1000, 1000);
+
+        Scene scene = new Scene(inst, 600, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
 
