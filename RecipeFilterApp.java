@@ -212,3 +212,33 @@ public class RecipeFilterApp extends Application {
 
         return validRecipeIDs;
     }
+
+
+    public static List<Integer> getRecords() {
+
+        List<Integer> recipeIDs = new ArrayList<>();
+        String sql = buildSQLQuery();
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            Connection con = DriverManager.getConnection(Credentials.url,Credentials.user,Credentials.password);
+
+            PreparedStatement pstatemnt = con.prepareStatement(sql);
+
+            ResultSet rs = pstatemnt.executeQuery();
+
+            while (rs.next()) {
+                recipeIDs.add(rs.getInt("recipe_id"));
+
+            }
+
+            rs.close();
+            pstatemnt.close();
+            con.close();
+
+        } catch (Exception e)
+        { System.out.println(e); }
+
+        return recipeIDs;
+    }
+}
