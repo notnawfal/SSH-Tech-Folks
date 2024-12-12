@@ -18,8 +18,6 @@ public class RecipeFilterApp extends Application {
     private static List<CheckBox> proteinCheckBoxes = new ArrayList<>();
     private static List<CheckBox> cookingTimeCheckBoxes = new ArrayList<>();
 
-    private ResultSet outcome   = null;
-
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Recipe Filter System");
@@ -40,8 +38,6 @@ public class RecipeFilterApp extends Application {
         RecipeSelectionUI recipeselect = new RecipeSelectionUI();
 
         generate.setOnAction(e -> {
-            applyFilters();
-
             Stage selectionstage = new Stage();
             recipeselect.start(selectionstage);
         });
@@ -71,10 +67,6 @@ public class RecipeFilterApp extends Application {
         return section;
     }
 
-    private void applyFilters() {
-        String sqlQuery = buildSQLQuery();
-        System.out.println(sqlQuery);
-    }
 
     public static String buildSQLQuery(List<CheckBox> mealType,List<CheckBox> dietarycheck, List<CheckBox> protein, List<CheckBox> cookingtime) {
         StringBuilder query = new StringBuilder("SELECT recipe_id FROM Recipes WHERE 1=1");
@@ -207,10 +199,9 @@ public class RecipeFilterApp extends Application {
     public static List<Integer> getRecords() {
 
         List<Integer> recipeIDs = new ArrayList<>();
-        String sql = buildSQLQuery();
+        String sql = buildSQLQuery(mealTypeCheckBoxes,dietaryCheckBoxes,proteinCheckBoxes,cookingTimeCheckBoxes);
 
         try {
-            Class.forName("org.postgresql.Driver");
             Connection con = DriverManager.getConnection(Credentials.url,Credentials.user,Credentials.password);
 
             PreparedStatement pstatemnt = con.prepareStatement(sql);
@@ -253,43 +244,42 @@ public class RecipeFilterApp extends Application {
     }
     
     public List<Record> getNeededRecipes() {
+        
         List<Record> neededrecipes = new ArrayList();
         String sql = "SELECT recipe_id, dish_name, meal_type, protein, cooking_time, img_url FROM Recipes WHERE recipe_id = ?";
 
         try {
-            Class.forName("org.postgresql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Recipe%20database", "u", "p");
-            PreparedStatement pstatemnt = con.prepareStatement(sql);
-            Iterator var5 = filteredvalidRecipes().iterator();
+            Connection con = DriverManager.getConnection(Credentials.url,Credentials.user,Credentials.password);
 
-            while(var5.hasNext()) {
-                Integer recipeId = (Integer)var5.next();
+            PreparedStatement pstatemnt = con.prepareStatement(sql);
+
+            for (Integer recipeId : filteredvalidRecipes()) {
                 pstatemnt.clearParameters();
                 pstatemnt.setInt(1, recipeId);
+
                 ResultSet rs = pstatemnt.executeQuery();
 
-                while(rs.next()) {
+                while (rs.next()) {
                     int recipe_id = rs.getInt("recipe_id");
                     String dish_name = rs.getString("dish_name");
                     String meal_type = rs.getString("meal_type");
                     String protein = rs.getString("protein");
                     int cooking_time = rs.getInt("cooking_time");
                     String img_url = rs.getString("img_url");
-                    Record record = new Record(this, recipe_id, dish_name, meal_type, protein, cooking_time, img_url);
-                    PrintStream var10000 = System.out;
-                    String var10001 = record.getDish_name();
-                    var10000.println("all recipes" + var10001 + record.getrecipe_id());
+
+                    Record record = new Record(recipe_id, dish_name, meal_type, protein, cooking_time, img_url);
+                    System.out.println("all recipes" + record.getDish_name() + record.getrecipe_id());
                     neededrecipes.add(record);
                 }
 
                 rs.close();
             }
-
             pstatemnt.close();
             con.close();
-        } catch (Exception var15) {
-            System.out.println(var15);
-        }
+
+
+        } catch (Exception e)
+        { System.out.println(e); }
 
         return neededrecipes;
     }
@@ -301,8 +291,6 @@ public class RecipeFilterApp extends Application {
         private String protein;
         private int cooking_time;
         private String img_url;
-        private String instructions;
-        private int step_num;
 
         public Record(int recipe_id,String dish_name, String meal_type, String protein, int cooking_time, String img_url){
             this.recipe_id = recipe_id;
@@ -313,7 +301,7 @@ public class RecipeFilterApp extends Application {
             this.img_url = img_url;
         }
 
-        // Getters and Setters
+        // Getters
         public int getrecipe_id() {
             return recipe_id;
         }
