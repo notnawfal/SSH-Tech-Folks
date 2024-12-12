@@ -3,15 +3,11 @@ package com.example.recipe_suggestion;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 import java.sql.*;
 
 
@@ -70,6 +66,7 @@ public class RecipeFilterApp extends Application {
 
         return section;
     }
+
 
     public static String buildSQLQuery(List<CheckBox> mealType,List<CheckBox> dietarycheck, List<CheckBox> protein, List<CheckBox> cookingtime) {
         StringBuilder query = new StringBuilder("SELECT recipe_id FROM Recipes WHERE 1=1");
@@ -139,7 +136,6 @@ public class RecipeFilterApp extends Application {
         return query.toString();
     }
 
-
     private List<String> getSelectedFilters(List<CheckBox> checkBoxes) {
         List<String> selected = new ArrayList<>();
         for (CheckBox checkBox : checkBoxes) {
@@ -160,8 +156,6 @@ public class RecipeFilterApp extends Application {
         }
         return formatted.toString();
     }
-
-
 
     public static List<Integer> validRecipes() {
 
@@ -191,7 +185,6 @@ public class RecipeFilterApp extends Application {
 
             while (rs.next()) {
                 validRecipeIDs.add(rs.getInt("recipe_id"));
-                System.out.println("validrecipes recipes id" + validRecipeIDs);
             }
             rs.close();
             stmt.close();
@@ -202,7 +195,6 @@ public class RecipeFilterApp extends Application {
 
         return validRecipeIDs;
     }
-
 
     public static List<Integer> getRecords() {
 
@@ -248,7 +240,6 @@ public class RecipeFilterApp extends Application {
                 }
             }
         }
-        System.out.println("filtered valid recipe id" + selectedRecipeIDs);
         return selectedRecipeIDs;
     }
     
@@ -292,7 +283,6 @@ public class RecipeFilterApp extends Application {
 
         return neededrecipes;
     }
-
     
     public class Record {
         private int recipe_id;
@@ -336,7 +326,6 @@ public class RecipeFilterApp extends Application {
             return img_url;
         }
     }
-
 
     public static void main(String[] args) {
         launch(args);
